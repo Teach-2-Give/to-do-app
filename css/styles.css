@@ -373,6 +373,15 @@ a {
     right: 20px;
   }
 }
+.dragging {
+  opacity: 0.5;
+  background-color: blue;
+  color: white;
+}
+
+.over {
+  border: 2px solid #000;
+}
 /* End delete button */
 /* Start Controls */
 .todo-app .todo-list .controls {

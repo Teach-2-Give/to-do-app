@@ -1,38 +1,60 @@
-// Drag and Drop handler Functions
+/*
+    -Drag and Drop handler Functions
+*/
 function dragStart(e) {
-    e.dataTransfer.setData("number", e.target.dataset.number); // Save "data-number" of dragged item in "number"
-    e.dataTransfer.setData("text", e.target.id); // Save "id" of dragged Item in "text"
-    e.dataTransfer.effectAllowed = "move"; // Make drag effect "move"
+    e.dataTransfer.setData("number", e.target.dataset.number); 
+    e.dataTransfer.setData("text", e.target.id); 
+    e.dataTransfer.effectAllowed = "move"; 
+    e.target.classList.add('dragging'); 
   }
   
   function dragOver(e) {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move"; // Make drop effect "move"
+    e.dataTransfer.dropEffect = "move";
+  }
+  
+  function dragEnter(e) {
+    e.target.classList.add('over');
+  }
+  
+  function dragLeave(e) {
+    e.target.classList.remove('over');
+  }
+  
+  function dragEnd(e) {
+    e.target.classList.remove('dragging');
   }
   
   function drop(e) {
     e.preventDefault();
     const number = e.dataTransfer.getData("number");
     const data = e.dataTransfer.getData("text");
-    if (number > e.currentTarget.dataset.number) { // Check if number of dragged item > number of dropped item
-      e.currentTarget.before(document.getElementById(data)); // Insert dragged item before dropped item
+    if (number > e.currentTarget.dataset.number) {
+      e.currentTarget.before(document.getElementById(data));
     } else {
-      e.currentTarget.after(document.getElementById(data)); // Insert dragged item after dropped item
+      e.currentTarget.after(document.getElementById(data));
     }
-    // update Numbering Todos
+    e.currentTarget.classList.remove('over');
+   
     numberingTodos();
-    // update Local Storage
+   
     updateLocalStorage();
   }
   
-  // Add Drag and Drop Events to each todo
+  /*Drag and Drop Events to each todo*/
   document.querySelectorAll(".todo-list .todo").forEach((li) => {
     li.setAttribute("draggable", true);
-    li.lastElementChild.setAttribute("draggable", false); // Make delete button not draggable
-    // Add Event "dragstart" to each todo
+    li.lastElementChild.setAttribute("draggable", false);
+   
     li.ondragstart = dragStart;
-    // Add Event "dragover" to each todo to allow drop
+  
     li.ondragover = dragOver;
-    // Add Event "drop" to each todo
+  
+    li.ondragenter = dragEnter;
+
+    li.ondragleave = dragLeave;
+    
+    li.ondragend = dragEnd;
+    
     li.ondrop = drop;
   });

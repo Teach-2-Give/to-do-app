@@ -9,10 +9,11 @@ const clearCompleted = document.querySelector(".controls .clear-completed");
 
 
 if (localStorage.length !== 0) {
-  // console.log("There's local storage"); // debug
 
-  // Calculate Number of Todos that were saved in Local Storage
-  // Get Keys of Todos and Save them in Array
+/*
+    - Calculate Number of Todos that were saved in Local Storage
+    - Get Keys of Todos and Save them in Array
+  */
   let numberOfSavedTodos = 0;
   let arrKeys = [];
   for (let [key, val] of Object.entries(localStorage)) {
@@ -21,60 +22,62 @@ if (localStorage.length !== 0) {
       arrKeys.push(key);
     }
   }
-
-  // console.log("Number of Saved Todos = " + numberOfSavedTodos); // debug
-  // console.log(arrKeys); // debug
-
+/*
+   - console.log("Number of Saved Todos = " + numberOfSavedTodos); // debug
+   - console.log(arrKeys); // debug
+*/
   if (numberOfSavedTodos > 0) {
-    // Get the saved Todos in order
+    
     for (let i = 1; i <= arrKeys.length; i++) {
       let data = JSON.parse(localStorage.getItem(`todo-${i}`));
 
-      // add saved todos to App dashboard
+      
       addTodo(data.text, data.class);
     }
   }
 }
 
-// Toggle Placeholder when you focus or blur input
+
 input.onfocus = function () {
-  this.placeholder = ""; // Empty placeholder
-  this.parentElement.classList.add("focused"); // Add Class "focused" to parent
+  this.placeholder = ""; 
+  this.parentElement.classList.add("focused");
 };
 input.onblur = function () {
-  if (this.value.trim() !== "") { // Check if input value is not empty
-    // Add a new Todo
+  if (this.value.trim() !== "") { 
+
     addTodo(this.value);
-    // update Local Storage
+  
     updateLocalStorage();
   }
-  this.value = ""; // Empty input
-  this.placeholder = this.dataset.placeholder; // Return placeholder back
-  this.parentElement.classList.remove("focused"); // Remove Class "focused" from parent
+  this.value = ""; 
+  this.placeholder = this.dataset.placeholder; 
+  this.parentElement.classList.remove("focused"); 
 };
 
 input.addEventListener("keyup", function (e) {
     if (e.key === "Enter" && this.value.trim() !== "") {
-        // Add a new Todo
+        
         addTodo(this.value);
-        // update Local Storage
+        
         updateLocalStorage();
-        this.value = ""; // Empty input
-        this.placeholder = this.dataset.placeholder; // Return placeholder back
-        this.parentElement.classList.remove("focused"); // Remove Class "focused" from parent
+        this.value = ""; 
+        this.placeholder = this.dataset.placeholder; 
+        this.parentElement.classList.remove("focused"); 
     }
 });
-// When you click on icon button or P Element, toggle between Classes "active", "completed" to its Parent li.todo,
-// When you click on delete button, remove its entire Parent li.todo
+/*
+  -When you click on icon button or P Element, toggle between Classes "active", "completed" to its Parent li.todo,
+  -When you click on delete button, remove its entire Parent li.todo
+*/
 todoListUl.addEventListener("click", function (e) {
   if (e.target.className === "icon" || e.target.tagName === "P") {
     e.target.parentElement.classList.toggle("active");
     e.target.parentElement.classList.toggle("completed");
-    // update Number of Left Active Items
+
     updateLeftItemsNumber();
-    // Update Filter
+
     updateFilter();
-    // update Local Storage
+
     updateLocalStorage();
   }
   if (e.target.className === "delete") {
@@ -82,13 +85,13 @@ todoListUl.addEventListener("click", function (e) {
 
     localStorage.removeItem(`${e.target.parentElement.id}`);
 
-    // update Number of Left Active Items
+ 
     updateLeftItemsNumber();
-    // Update Filter
+
     updateFilter();
-    // update Numbering Todos
+
     numberingTodos();
-    // update Local Storage
+
     updateLocalStorage();
   }
 });
@@ -101,28 +104,28 @@ todoListUl.addEventListener("click", function (e) {
 */
 filterBtns.forEach(btn => {
   btn.onclick = function () {
-    // Remove Class "selected" from all btns
+
     filterBtns.forEach(btn => {
       btn.classList.remove("selected");
     });
-    // Add Class "selected" to clicked btn
+
     this.classList.add("selected");
-    // Check data-filter of clicked li to make filter
+
     makeFilter(this.dataset.filter);
   };
 });
 
 
-// When you click on "Clear Completed" button, Remove all completed todos
+/*"Clear Completed"*/
 clearCompleted.onclick = function () {
   document.querySelectorAll(".todo-list .todo").forEach(todo => {
     if (todo.classList.contains("completed")) {
       todo.remove();
       localStorage.removeItem(`${todo.id}`);
 
-      // update Numbering Todos
+
       numberingTodos();
-      // update Local Storage
+
       updateLocalStorage();
     }
   });
@@ -131,67 +134,66 @@ clearCompleted.onclick = function () {
 
 /** Helper Functions */
 
-// Create Function to apply the new Theme
 function applyTheme(newTheme) {
   let lastTheme = todoApp.classList.item(1);
-  todoApp.classList.remove(lastTheme); // Remove the last theme
-  todoApp.classList.add(newTheme); // Add the new theme
-  document.querySelector(`[data-theme="${newTheme}"]`).classList.remove("available"); // Remove Class "available" from the img of new theme
-  document.querySelector(`[data-theme="${lastTheme}"]`).classList.add("available"); // Add Class "available" to the img of last theme
+  todoApp.classList.remove(lastTheme); 
+  todoApp.classList.add(newTheme); 
+  document.querySelector(`[data-theme="${newTheme}"]`).classList.remove("available");
+  document.querySelector(`[data-theme="${lastTheme}"]`).classList.add("available");
 }
 
 
-// Create function to add a new todo
+/*dd a new todo*/
 function addTodo(textParam, classParam) {
-  const li = document.createElement("li"); // Create Element
+  const li = document.createElement("li"); 
   li.id = `todo-${document.querySelectorAll(".todo").length + 1}`;
-  li.className = classParam || "todo active"; // Add Class Name to Element
-  // set InnerHTML
+  li.className = classParam || "todo active"; 
+ 
   li.innerHTML = `
     <span class="icon"><img class="check" src="images/icon-check.svg" alt="icon-check"></span>
     <p>${textParam}</p>
     <img class="delete" src="images/icon-cross.svg" alt="icon-cross">
   `;
-  // Append Element li to TodoList ul
+
   todoListUl.appendChild(li);
-  // update Number of Left Active Items
+
   updateLeftItemsNumber();
-  // update numbering Todos
+
   numberingTodos();
 }
 
 
-// Create Function to update left Active Items Number
+
 function updateLeftItemsNumber() {
-  leftItemsNumberCount.innerHTML = document.querySelectorAll(".todo.active").length; // Get Number of li.todo has Class "active"
+  leftItemsNumberCount.innerHTML = document.querySelectorAll(".todo.active").length; 
 }
-// update Number of Left Active Items
+
 updateLeftItemsNumber();
 
 
-// Create Function to make filter
+/*Make filter*/
 function makeFilter(filtered) {
   document.querySelectorAll(".todo-list .todo").forEach(todo => {
     if (!todo.classList.contains(filtered)) {
-      todo.classList.add("hidden"); // Add Class "hidden" to all todos except filtered Class
+      todo.classList.add("hidden"); 
     } else {
-      todo.classList.remove("hidden"); // Remove Class "hidden" from the todos that has filtered Class
+      todo.classList.remove("hidden"); 
     }
   });
 }
 
 
-// Create Function to update filter
+/*Update filter*/
 function updateFilter() {
   for (btn of filterBtns) {
-    if(btn.classList.contains("selected")) { // Check which filter btn has been selected
-      makeFilter(btn.dataset.filter); // make filter
+    if(btn.classList.contains("selected")) {
+      makeFilter(btn.dataset.filter);
     }
   }
 }
 
 
-// Create function to make numbering Todos [both data-number and id]
+/*Numbering Todos [both data-number and id]*/
 function numberingTodos() {
   document.querySelectorAll(".todo-list .todo").forEach((todo, i) => {
     todo.setAttribute("data-number", i + 1);
@@ -201,16 +203,15 @@ function numberingTodos() {
 numberingTodos();
 
 
-// Create Function to Update Local Storage
+/*Update Local Storage*/
 function updateLocalStorage() {
-  // Remove Items of Saved Todos from local storage
+  
   for (let [key, val] of Object.entries(localStorage)) {
     if (key.startsWith("todo-")) {
       localStorage.removeItem(key);
     }
   }
 
-  // Add Items of Saved Todos in local storage
   document.querySelectorAll(".todo-list .todo").forEach(todo => {
     let data = {
       "class": todo.className,
@@ -218,4 +219,20 @@ function updateLocalStorage() {
     }
     localStorage.setItem(todo.id, JSON.stringify(data));
   });
+}
+
+/* Placeholder tasks*/
+const placeholderTasks = ["Complete online JavaScript course", "Jog around the park 3x", "10 minutes meditation", "Complete Todo App on Frontend Mentor"];
+
+
+let hasTasksInLocalStorage = false;
+for (let i = 0; i < localStorage.length; i++) {
+  if (localStorage.key(i).startsWith("todo-")) {
+    hasTasksInLocalStorage = true;
+    break;
+  }
+}
+
+if (!hasTasksInLocalStorage) {
+  placeholderTasks.forEach(task => addTodo(task));
 }
