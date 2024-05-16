@@ -1,36 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  
-  <title>Frontend Mentor | Todo app</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/reset.css" />      
+    <link rel="stylesheet" href="./css/style.css" />
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
-</head>
-<body>
+    <title>Frontend Mentor | Todo app</title>
+  </head>
+  <body class="body">
+    <div class="header"></div>
+    <main>
+      <div class="content">
+        <h2 class="content_title">TODO</h2>
+        <!--Dark Mode Swich -->
+        <div class="theme-switch-wrapper">
+          <span class="toggle-icon">
+            <img class="icon" src="./images/icon-light.svg" alt="" />
+          </span>
+          <label class="theme-switch">
+            <input class="input_darkmode" type="checkbox" />
+          </label>
+        </div>
+      </div>
 
-  Todo
+      <form class="addTodo">
+        <button type="submit" class="btn addNewBtn" aria-label="button">
+          <span class="plusSign custom_checkbox">+</span>
+        </button>
+        <input
+          class="addNew"
+          name="add"
+          type="text"
+          id="create"
+          placeholder="Create a new todo..."
+          aria-label="Create a new todo..."
+        />
+      </form>
 
-  <!-- Add dynamic number --> items left
+      <div class="container">
+        <div class="alert"></div>
+        <div class="card">
+          <div>
+            <ul class="tasks"></ul>
+          </div>
 
-  All
-  Active 
-  Completed
+          <div class="task items_left">
+            <p class="counter">5 items left</p>
+            <button class="btn clear">Clear Completed</button>
+          </div>
+        </div>
 
-  Clear Completed
+        <div class="bottom">
+          <div class="buttons filter-todos">
+            <button class="btn all active" value="all">All</button>
+            <button class="btn activeBtn" value="active">Active</button>
+            <button class="btn completed" value="completed">Completed</button>
+          </div>
+        </div>
+      </div>
+      <footer class="attribution">
+        <p class="drag_text">Drag and drop to reorder list</p>
+        <p class="author">
+          Challenge by
+          <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+          Coded by <a href="https://github.com/victorpreston" target="_blank">victorpreston</a>.
+        </p>
+      </footer>
+    </main>
 
-  Drag and drop to reorder list
+    <template id="task-template">
+      <li class="task">
+        <input class="task-input" type="checkbox" />
+        <label>
+          <span class="custom_checkbox"></span>
+        </label>
+        <span class="deleteBtn">
+          <img class="delete" src="./images/icon-cross.svg" alt="" />
+        </span>
+      </li>
+    </template>
 
-  <div class="attribution">
-    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
-  </div>
-</body>
+    <script src="./js/dark.js"></script>
+    <script src="./js/todo.js"></script>
+  </body>
 </html>
